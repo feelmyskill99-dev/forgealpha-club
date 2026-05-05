@@ -1,4 +1,4 @@
-from enum import IntEnum
+from enum import Enum, IntEnum
 
 
 class Tier(IntEnum):
@@ -8,7 +8,7 @@ class Tier(IntEnum):
     PRO = 3
 
 
-class PaymentStatus(str):
+class PaymentStatus(str, Enum):
     PENDING = "pending"
     CONFIRMED = "confirmed"
     FAILED = "failed"

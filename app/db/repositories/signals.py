@@ -1,21 +1,46 @@
+from typing import Any
+
 from app.db.connection import get_db
 
 
-async def create_signal(text: str, min_tier: int, source: str = "onchain"):
-    async with await get_db() as db:
-        await db.execute(
-            "INSERT INTO signals (text, min_tier, source) VALUES (?, ?, ?)",
-            (text, min_tier, source)
+async def add_signal(
+    title: str,
+    description: str,
+    source: str | None = None,
+    min_tier: int = 0,
+) -> int:
+    async with get_db() as db:
+        cursor = await db.execute(
+            """
+            INSERT INTO signals (
+                title,
+                description,
+                source,
+                min_tier
+            )
+            VALUES (?, ?, ?, ?)
+            """,
+            (title, description, source, min_tier),
         )
         await db.commit()
-        cursor = await db.execute("SELECT last_insert_rowid()")
-        return (await cursor.fetchone())[0]
+
+        signal_id = cursor.lastrowid
+        if signal_id is None:
+            raise RuntimeError("Failed to create signal")
+
+        return int(signal_id)
 
 
-async def get_recent_signals(limit: int = 5):
-    async with await get_db() as db:
+async def get_recent_signals(limit: int = 5) -> list[dict[str, Any]]:
+    async with get_db() as db:
         cursor = await db.execute(
-            "SELECT * FROM signals ORDER BY created_at DESC LIMIT ?",
-            (limit,)
+            """
+            SELECT *
+            FROM signals
+            ORDER BY created_at DESC
+            LIMIT ?
+            """,
+            (limit,),
         )
-        return [dict(row) for row in await cursor.fetchall()]
+        rows = await cursor.fetchall()
+        return [dict(row) for row in rows]

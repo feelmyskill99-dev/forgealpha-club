@@ -1,0 +1,47 @@
+[33mb38c069[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Add services and bot routers
+ .github/workflows/ci.yml    | 32 [32m++++++++++++++++++++++++++++++++[m
+ Dockerfile                  | 10 [32m++++++++++[m
+ docker-compose.yml          | 10 [32m++++++++++[m
+ tests/test_payments.py      |  8 [32m++++++++[m
+ tests/test_subscriptions.py |  8 [32m++++++++[m
+ 5 files changed, 68 insertions(+)
+[33mb999385[m Add services and bot routers
+ app/bot/keyboards.py            | 18 [32m++++++++++++++++++[m
+ app/bot/messages.py             | 25 [32m+++++++++++++++++++++++++[m
+ app/bot/routers/admin.py        | 24 [32m++++++++++++++++++++++++[m
+ app/bot/routers/signals.py      | 24 [32m++++++++++++++++++++++++[m
+ app/bot/routers/start.py        | 13 [32m+++++++++++++[m
+ app/bot/routers/subscribe.py    | 33 [32m+++++++++++++++++++++++++++++++++[m
+ app/services/payments.py        | 24 [32m++++++++++++++++++++++++[m
+ app/services/signal_delivery.py | 23 [32m+++++++++++++++++++++++[m
+ app/services/subscriptions.py   | 26 [32m++++++++++++++++++++++++++[m
+ 9 files changed, 210 insertions(+)
+[33m8ae57f4[m Initial commit: ForgeAlpha Club v1.0 — полный инсайдерский клуб альфы
+ .env.example                    |   8 [32m+[m[31m-[m
+ README.md                       | 240 [32m++++++++++++++[m[31m---------------------[m
+ app/core/config.py              |  26 [32m++++[m
+ app/core/constants.py           |  24 [32m++++[m
+ app/core/logging.py             |  21 [32m++++[m
+ app/db/connection.py            |  18 [32m+++[m
+ app/db/migrations/001_init.sql  |  41 [32m++++++[m
+ app/db/repositories/payments.py |  30 [32m+++++[m
+ app/db/repositories/signals.py  |  21 [32m++++[m
+ app/db/repositories/users.py    |  29 [32m+++++[m
+ app/main.py                     |  30 [32m+++++[m
+ bot.py                          | 271 [31m----------------------------------------[m
+ config.py                       |  25 [31m----[m
+ database.py                     | 101 [31m---------------[m
+ pyproject.toml                  |  29 [32m+++++[m
+ requirements.txt                |  17 [32m++[m[31m-[m
+ scanner.py                      |  41 [31m------[m
+ 17 files changed, 383 insertions(+), 589 deletions(-)
+[33mb6eb7ca[m Initial commit: ForgeAlpha Club v1.0 — полный инсайдерский клуб альфы
+ .env.example     |   4 [32m+[m
+ .gitignore       |  55 [32m+++++++++++[m
+ README.md        | 192 [32m+++++++++++++++++++++++++++++++++++++++[m
+ bot.py           | 271 [32m+++++++++++++++++++++++++++++++++++++++++++++++++++++++[m
+ config.py        |  25 [32m+++++[m
+ database.py      | 101 [32m+++++++++++++++++++++[m
+ requirements.txt |   9 [32m++[m
+ scanner.py       |  41 [32m+++++++++[m
+ 8 files changed, 698 insertions(+)

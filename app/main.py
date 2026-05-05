@@ -1,29 +1,26 @@
 import asyncio
-from aiogram import Bot, Dispatcher
-from aiogram.enums import ParseMode
-from aiogram.client.default import DefaultBotProperties
 
+from aiogram import Bot, Dispatcher
+
+from app.bot.routers import admin, signals, start, subscribe
 from app.core.config import settings
 from app.core.logging import logger
-from app.bot.routers import start, subscribe, admin, signals   # will be created next
+from app.db.connection import init_db
 
 
-async def main():
-    bot = Bot(
-        token=settings.BOT_TOKEN,
-        default=DefaultBotProperties(parse_mode=ParseMode.HTML)
-    )
-    dp = Dispatcher()
+async def main() -> None:
+    await init_db()
 
-    # Include routers
-    dp.include_router(start.router)
-    dp.include_router(subscribe.router)
-    dp.include_router(admin.router)
-    dp.include_router(signals.router)
+    bot = Bot(token=settings.BOT_TOKEN)
+    dispatcher = Dispatcher()
 
-    logger.info("ForgeAlpha Club v2 started", env=settings.ENV)
+    dispatcher.include_router(start.router)
+    dispatcher.include_router(subscribe.router)
+    dispatcher.include_router(signals.router)
+    dispatcher.include_router(admin.router)
 
-    await dp.start_polling(bot)
+    logger.info("bot_started")
+    await dispatcher.start_polling(bot)
 
 
 if __name__ == "__main__":

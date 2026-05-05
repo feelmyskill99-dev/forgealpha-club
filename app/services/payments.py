@@ -1,24 +1,17 @@
-from datetime import datetime
-from app.db.repositories.payments import create_payment, confirm_payment
-from app.db.repositories.users import update_user_tier
-from app.core.constants import PaymentStatus, Tier
 from app.core.logging import logger
+from app.db.repositories.payments import confirm_payment, create_payment
+from app.db.repositories.users import update_user_tier
 
 
 async def create_invoice(user_id: int, tier: int, amount: float) -> int:
-    """Создаёт платёж в статусе pending. НЕ апгрейдит пользователя сразу!"""
+    """Create a pending payment invoice. Does not upgrade the user."""
     payment_id = await create_payment(user_id, tier, amount)
-    logger.info("Payment created", payment_id=payment_id, user_id=user_id, tier=tier, status=PaymentStatus.PENDING)
+    logger.info("payment_invoice_created", payment_id=payment_id, user_id=user_id, tier=tier)
     return payment_id
 
 
-async def confirm_payment_and_activate(user_id: int, payment_id: int, tier: int):
-    """Подтверждает платёж и только потом активирует подписку."""
-    await confirm_payment(payment_id)
+async def confirm_invoice(payment_id: int, user_id: int, tier: int, tx_hash: str | None = None) -> None:
+    """Confirm payment and only then upgrade user tier."""
+    await confirm_payment(payment_id, tx_hash=tx_hash)
     await update_user_tier(user_id, tier)
-    logger.info("Payment confirmed and subscription activated", payment_id=payment_id, user_id=user_id, tier=tier)
-
-
-async def get_payment_status(payment_id: int) -> str:
-    # В реальной версии — запрос к БД
-    return PaymentStatus.PENDING  # заглушка для демо
+    logger.info("payment_confirmed", payment_id=payment_id, user_id=user_id, tier=tier)

@@ -1,26 +1,41 @@
-from pydantic_settings import BaseSettings
-from pydantic import Field
-from typing import Literal
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    BOT_TOKEN: str = Field(..., env="BOT_TOKEN")
-    ADMIN_ID: int = Field(..., env="ADMIN_ID")
-    PAYMENT_WALLET: str = Field(..., env="PAYMENT_WALLET")
+    ENV: str = "development"
 
-    ENV: Literal["development", "production"] = "development"
-    LOG_LEVEL: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO"
+    BOT_TOKEN: str
+    ADMIN_ID: int
+    PAYMENT_WALLET: str
 
-    DATABASE_URL: str = "sqlite+aiosqlite:///./forgealpha.db"
+    DATABASE_URL: str = "forgealpha.db"
+    LOG_LEVEL: str = "INFO"
 
-    # Tier configuration
-    TIER_DELAYS: dict[int, int] = {0: 60, 1: 30, 2: 5, 3: 0}
-    TIER_PRICES: dict[int, float] = {0: 0, 1: 100, 2: 150, 3: 0}
+    BASIC_DELAY_SECONDS: int = 900
+    VIP_DELAY_SECONDS: int = 0
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        extra = "ignore"
+    BASIC_PRICE_USD: int = 49
+    VIP_PRICE_USD: int = 149
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
+
+    @property
+    def TIER_PRICES(self) -> dict[int, int]:
+        return {
+            1: self.BASIC_PRICE_USD,
+            2: self.VIP_PRICE_USD,
+        }
+
+    @property
+    def TIER_DELAYS(self) -> dict[int, int]:
+        return {
+            1: self.BASIC_DELAY_SECONDS,
+            2: self.VIP_DELAY_SECONDS,
+        }
 
 
-settings = Settings()
+settings = Settings()  # type: ignore[call-arg]

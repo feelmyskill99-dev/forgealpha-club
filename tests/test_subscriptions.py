@@ -1,5 +1,5 @@
 import pytest
-from app.services.subscriptions import is_subscription_active, get_user_tier
+from app.services.subscriptions import get_user_tier
 
 
 @pytest.mark.asyncio
