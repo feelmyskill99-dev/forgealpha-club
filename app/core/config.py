@@ -3,7 +3,6 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     ENV: str = "development"
-
     BOT_TOKEN: str
     ADMIN_ID: int
     PAYMENT_WALLET: str

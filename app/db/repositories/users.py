@@ -10,7 +10,8 @@ async def create_or_update_user(user_id: int, username: str | None) -> None:
             INSERT INTO users (user_id, username)
             VALUES (?, ?)
             ON CONFLICT(user_id) DO UPDATE SET
-                username = excluded.username
+                username = excluded.username,
+                updated_at = CURRENT_TIMESTAMP
             """,
             (user_id, username),
         )
@@ -28,11 +29,7 @@ async def get_user(user_id: int) -> dict[str, Any] | None:
             (user_id,),
         )
         row = await cursor.fetchone()
-
-        if row is None:
-            return None
-
-        return dict(row)
+        return None if row is None else dict(row)
 
 
 async def update_user_tier(
@@ -45,7 +42,7 @@ async def update_user_tier(
             await db.execute(
                 """
                 UPDATE users
-                SET tier = ?
+                SET tier = ?, updated_at = CURRENT_TIMESTAMP
                 WHERE user_id = ?
                 """,
                 (tier, user_id),
@@ -57,10 +54,10 @@ async def update_user_tier(
                 SET
                     tier = ?,
                     subscription_status = 'active',
-                    subscribed_until = ?
+                    subscribed_until = ?,
+                    updated_at = CURRENT_TIMESTAMP
                 WHERE user_id = ?
                 """,
                 (tier, subscribed_until, user_id),
             )
-
         await db.commit()

@@ -1,5 +1,6 @@
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 import aiosqlite
 
@@ -17,7 +18,7 @@ async def get_db() -> AsyncIterator[aiosqlite.Connection]:
 
 
 async def init_db() -> None:
+    migration_path = Path("app/db/migrations/001_init.sql")
     async with get_db() as db:
-        with open("app/db/migrations/001_init.sql", encoding="utf-8") as f:
-            await db.executescript(f.read())
+        await db.executescript(migration_path.read_text(encoding="utf-8"))
         await db.commit()

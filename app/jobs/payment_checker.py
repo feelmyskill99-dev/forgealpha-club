@@ -1,15 +1,13 @@
 from app.core.logging import logger
+from app.db.repositories.payments import get_pending_payments
 
 
 async def check_pending_payments() -> None:
     """
-    Placeholder for real payment verification.
+    Safe placeholder for real payment verification.
 
-    Real implementation should:
-    - load pending payments from database;
-    - verify transaction hash against payment provider / blockchain;
-    - confirm payment only after successful verification;
-    - activate subscription after confirmed payment.
+    Production implementation should verify tx_hash, recipient wallet, amount,
+    currency, confirmations, duplicate usage and expiration before confirming.
     """
-    logger.info("payment_checker_started")
-    logger.info("payment_checker_finished", checked=0)
+    pending = await get_pending_payments()
+    logger.info("payment_checker_finished", checked=len(pending), confirmed=0)

@@ -12,22 +12,15 @@ async def add_signal(
     async with get_db() as db:
         cursor = await db.execute(
             """
-            INSERT INTO signals (
-                title,
-                description,
-                source,
-                min_tier
-            )
+            INSERT INTO signals (title, description, source, min_tier)
             VALUES (?, ?, ?, ?)
             """,
             (title, description, source, min_tier),
         )
         await db.commit()
-
         signal_id = cursor.lastrowid
         if signal_id is None:
             raise RuntimeError("Failed to create signal")
-
         return int(signal_id)
 
 

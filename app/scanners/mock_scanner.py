@@ -11,12 +11,7 @@ class MockScanner(BaseScanner):
         source = "mock"
         min_tier = 0
 
-        await add_signal(
-            title=title,
-            description=description,
-            source=source,
-            min_tier=min_tier,
-        )
+        await add_signal(title=title, description=description, source=source, min_tier=min_tier)
 
         return [
             {

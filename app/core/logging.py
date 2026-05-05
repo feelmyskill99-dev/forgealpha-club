@@ -1,21 +1,21 @@
-import structlog
 import logging
+
+import structlog
+
 from app.core.config import settings
 
-logging.basicConfig(
-    level=getattr(logging, settings.LOG_LEVEL),
-    format="%(message)s",
-)
+logging.basicConfig(level=settings.LOG_LEVEL)
 
 structlog.configure(
     processors=[
         structlog.processors.TimeStamper(fmt="iso"),
-        structlog.stdlib.add_log_level,
-        structlog.processors.JSONRenderer() if settings.ENV == "production" else structlog.dev.ConsoleRenderer(),
+        structlog.processors.add_log_level,
+        structlog.processors.JSONRenderer()
+        if settings.ENV == "production"
+        else structlog.dev.ConsoleRenderer(),
     ],
-    logger_factory=structlog.stdlib.LoggerFactory(),
-    wrapper_class=structlog.stdlib.BoundLogger,
+    wrapper_class=structlog.make_filtering_bound_logger(logging.getLevelName(settings.LOG_LEVEL)),
     cache_logger_on_first_use=True,
 )
 
-logger = structlog.get_logger("forgealpha")
+logger = structlog.get_logger()

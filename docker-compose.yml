@@ -1,10 +1,8 @@
-version: '3.8'
-
 services:
   bot:
     build: .
     env_file:
       - .env
-    restart: unless-stopped
     volumes:
-      - ./forgealpha.db:/app/forgealpha.db
+      - .:/app
+    command: python -m app.main

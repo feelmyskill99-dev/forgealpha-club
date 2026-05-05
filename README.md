@@ -1,146 +1,131 @@
 # ForgeAlpha Club — On-Chain Intelligence Bot
 
-**Professional crypto analytics platform powered by real-time blockchain data, wallet tracking, and public market signals.**
+ForgeAlpha Club is a Telegram bot prototype for public crypto market monitoring, on-chain activity alerts, and subscription-based signal delivery.
 
-> **GitHub**: https://github.com/feelmyskill99-dev/forgealpha-club  
-> **Version**: 2.0 (Modular Architecture)
+The project is designed as legal-safe demo software. It does **not** sell private information, insider tips, confidential data, NDA-protected material, or non-public listing information.
 
----
+## Features
 
-## 🚀 What is ForgeAlpha Club?
+- Telegram bot based on aiogram 3
+- SQLite storage via aiosqlite
+- Modular architecture: bot routers, services, repositories, scanners, jobs
+- Subscription tiers with delayed signal delivery
+- Pending payment invoices with manual confirmation flow
+- Mock scanner for demo on-chain events
+- Jobs for subscription expiration and payment checking placeholder
+- Tests, linting, type checking, Docker and GitHub Actions CI
 
-ForgeAlpha Club is a **legal and transparent crypto intelligence tool** that helps traders and analysts get faster access to:
+## Project structure
 
-- Real-time on-chain activity (new pools, large wallet movements, smart money flows)
-- Public market signals and volume spikes
-- Wallet performance tracking and analytics
-- Aggregated public information from open sources
+```text
+app/
+  bot/
+    routers/
+      admin.py
+      signals.py
+      start.py
+      subscribe.py
+    keyboards.py
+    messages.py
+  core/
+    config.py
+    constants.py
+    logging.py
+  db/
+    connection.py
+    migrations/001_init.sql
+    repositories/
+      payments.py
+      signals.py
+      users.py
+  jobs/
+    expire_subscriptions.py
+    payment_checker.py
+  scanners/
+    base.py
+    mock_scanner.py
+  services/
+    payments.py
+    signal_delivery.py
+    subscriptions.py
+scripts/
+  init_db.py
+  run_bot.ps1
+  run_bot.sh
+  run_mock_scanner.py
+tests/
+```
 
-We do **not** sell private information, insider tips, or confidential data. All signals are derived from publicly available blockchain data, public APIs, and open social channels.
+## Local setup
 
----
-
-## ✨ Key Features (v2)
-
-- **Tier-based access** with time advantage (0–60 seconds delay)
-- **Real-time on-chain scanner** (mock for demo, ready for Helius/QuickNode)
-- **Secure payment flow** (pending → confirmed, no instant upgrades)
-- **Referral system** with real rewards only after confirmed payment
-- **Modular architecture** (easy to extend and maintain)
-- **Production-ready structure** (Docker, CI, migrations, tests)
-
----
-
-## 💎 Subscription Tiers
-
-| Tier          | Price          | Delay | What you get |
-|---------------|----------------|-------|--------------|
-| **Free**      | Free           | 60s   | Basic on-chain alerts |
-| **Basic**     | $100 / 0.5 SOL | 30s   | Faster signals + wallet tracking |
-| **VIP**       | $150 / 1 SOL   | 5s    | Priority signals + advanced analytics |
-| **Pro**       | Custom         | 0s    | Full access + API + revenue share (by invitation) |
-
----
-
-## 🛠️ Quick Start (Local Development)
-
-```bash
-git clone https://github.com/feelmyskill99-dev/forgealpha-club.git
-cd forgealpha-club
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate   # Windows: venv\Scripts\activate
-
+```powershell
+py -3.11 -m venv .venv
+.\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
-cp .env.example .env
-# Edit .env with your BOT_TOKEN and ADMIN_ID
-
-python -m app.main
-```
-
----
-
-## 📁 Project Structure (v2)
-
-```
-forgealpha-club/
-├── app/
-│   ├── main.py
-│   ├── core/              # Configuration, logging, constants
-│   ├── bot/               # Telegram bot routers & handlers
-│   ├── db/                # Database connection + repositories + migrations
-│   ├── services/          # Business logic (payments, subscriptions, signals)
-│   ├── scanners/          # On-chain scanners (mock + real)
-│   └── utils/
-├── tests/
-├── scripts/
-├── .github/workflows/
-├── Dockerfile
-├── docker-compose.yml
-├── pyproject.toml
-├── README.md
-└── requirements.txt
-```
-
----
-
-## 🔒 Security & Compliance Notes
-
-- All payments go through **pending → confirmed** flow only
-- No instant tier upgrades without verified transaction
-- HTML escaping enabled for all user-generated content
-- Rate limiting and input validation on all endpoints
-- Clear separation between public on-chain data and any paid features
-
-**Legal positioning**: This product provides **on-chain analytics and public market intelligence**. It does not provide or sell non-public information.
-
----
-
-## 🧪 Testing
-
-```bash
+Copy-Item .env.example .env
+python scripts/init_db.py
 pytest
 ruff check .
 mypy app/
 ```
 
----
+## Run bot
 
-## 🐳 Docker
-
-```bash
-docker-compose up --build
+```powershell
+.\scripts\run_bot.ps1
 ```
 
----
+Linux/macOS:
 
-## 📈 Roadmap
+```bash
+bash scripts/run_bot.sh
+```
 
-- [x] Modular architecture (v2)
-- [x] Secure payment flow
-- [ ] Real Helius/QuickNode scanner integration
-- [ ] PostgreSQL + Alembic migrations
-- [ ] Full referral system with confirmed payments only
-- [ ] Web dashboard (FastAPI + HTMX)
-- [ ] NFT subscription option
-- [ ] CI/CD + automated tests
+## Demo flow
 
----
+1. Initialize database: `python scripts/init_db.py`
+2. Run mock scanner: `python scripts/run_mock_scanner.py`
+3. Start bot: `python -m app.main`
+4. User creates invoice through subscription menu
+5. Admin confirms invoice:
 
-## ⚠️ Important
+```text
+/confirm_payment <payment_id> <user_id> <tier> [tx_hash]
+```
 
-This is **demo software**. Real payments are not processed.  
-For production use, implement proper Solana transaction verification (Helius, QuickNode, or Solana RPC).
+6. User tier is upgraded only after confirmed payment
+7. Expired subscriptions can be processed with `expire_subscriptions` job
 
-**Not financial advice.** Cryptocurrency trading involves significant risk.
+## Admin commands
 
----
+```text
+/admin
+/add_signal <title> | <description> | [source] | [min_tier]
+/confirm_payment <payment_id> <user_id> <tier> [tx_hash]
+```
 
-## 🤝 Contributing
+## Payment safety
 
-Pull requests are welcome. Please follow the modular structure and add tests for new features.
+Current implementation is intentionally conservative:
 
----
+- creating invoice does not upgrade user;
+- payment starts as `pending`;
+- subscription activates only through explicit confirmation;
+- real blockchain verification is not implemented yet;
+- payment checker is a safe placeholder.
 
-**ForgeAlpha Club v2** — Clean. Modular. Legal-safe. Ready for growth.
+Before production launch, add a real verifier that checks transaction hash, recipient wallet, amount, currency, confirmations, duplicate usage and expiration.
+
+## CI
+
+GitHub Actions runs:
+
+```bash
+ruff check .
+pytest
+mypy app/
+```
+
+## License
+
+MIT or proprietary, depending on your product plan.

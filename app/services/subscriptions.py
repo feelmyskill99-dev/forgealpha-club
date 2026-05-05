@@ -5,18 +5,13 @@ from app.db.repositories.users import get_user, update_user_tier
 
 async def activate_subscription(user_id: int, tier: int, months: int = 1) -> None:
     subscribed_until = (datetime.now() + timedelta(days=30 * months)).isoformat()
-    await update_user_tier(
-        user_id=user_id,
-        tier=tier,
-        subscribed_until=subscribed_until,
-    )
+    await update_user_tier(user_id=user_id, tier=tier, subscribed_until=subscribed_until)
 
 
 async def get_user_tier(user_id: int) -> int:
     user = await get_user(user_id)
     if user is None:
         return 0
-
     return int(user.get("tier", 0))
 
 

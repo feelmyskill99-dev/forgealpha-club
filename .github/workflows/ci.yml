@@ -2,31 +2,31 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
-  test:
+  checks:
     runs-on: ubuntu-latest
+    env:
+      ENV: test
+      BOT_TOKEN: "123456:test"
+      ADMIN_ID: "123456789"
+      PAYMENT_WALLET: "test_wallet"
+      DATABASE_URL: "forgealpha_test.db"
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-
+          python-version: "3.11"
       - name: Install dependencies
         run: |
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install ruff mypy pytest pytest-asyncio
-
-      - name: Lint with ruff
+      - name: Ruff
         run: ruff check .
-
-      - name: Type check with mypy
+      - name: Tests
+        run: pytest
+      - name: Mypy
         run: mypy app/
-
-      - name: Run tests
-        run: pytest --asyncio-mode=auto

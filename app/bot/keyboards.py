@@ -7,8 +7,8 @@ from app.core.constants import TIER_NAMES, Tier
 def main_menu_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="📡 Latest signals", callback_data="signals")],
-            [InlineKeyboardButton(text="💳 Subscribe", callback_data="subscribe")],
+            [InlineKeyboardButton(text="📡 Последние сигналы", callback_data="signals")],
+            [InlineKeyboardButton(text="💳 Подписка", callback_data="subscribe")],
         ]
     )
 
@@ -28,6 +28,6 @@ def subscribe_keyboard() -> InlineKeyboardMarkup:
                     callback_data="buy_2",
                 )
             ],
-            [InlineKeyboardButton(text="⬅️ Back", callback_data="main_menu")],
+            [InlineKeyboardButton(text="⬅️ Назад", callback_data="main_menu")],
         ]
     )

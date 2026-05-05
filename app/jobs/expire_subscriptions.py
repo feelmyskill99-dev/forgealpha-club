@@ -8,7 +8,8 @@ async def expire_subscriptions() -> None:
             UPDATE users
             SET
                 tier = 0,
-                subscription_status = 'expired'
+                subscription_status = 'expired',
+                updated_at = CURRENT_TIMESTAMP
             WHERE
                 subscription_status = 'active'
                 AND subscribed_until IS NOT NULL

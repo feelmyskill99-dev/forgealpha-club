@@ -15,12 +15,10 @@ from app.db.connection import init_db  # noqa: E402
 @pytest.fixture(autouse=True)
 async def setup_test_database() -> None:
     db_path = Path("forgealpha_test.db")
-
     if db_path.exists():
         db_path.unlink()
 
     await init_db()
-
     yield
 
     if db_path.exists():
