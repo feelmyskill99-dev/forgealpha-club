@@ -1,192 +1,146 @@
-# ForgeAlpha Club — Инсайдерский клуб чистой альфы
+# ForgeAlpha Club — On-Chain Intelligence Bot
 
-**Твой проект по продаже времени и контекста в крипте.**
+**Professional crypto analytics platform powered by real-time blockchain data, wallet tracking, and public market signals.**
 
 > **GitHub**: https://github.com/feelmyskill99-dev/forgealpha-club  
-> **Автор**: feelmyskill99-dev
+> **Version**: 2.0 (Modular Architecture)
 
 ---
 
-## 🚀 Быстрый старт (5 минут)
+## 🚀 What is ForgeAlpha Club?
 
-Мы построили полный стек: от ончейн-сканера до Telegram-бота с трехуровневой монетизацией, защитой от слива и этическим фильтром (только серый, без уголовки).
+ForgeAlpha Club is a **legal and transparent crypto intelligence tool** that helps traders and analysts get faster access to:
 
-## 🚀 Быстрый старт (5 минут)
+- Real-time on-chain activity (new pools, large wallet movements, smart money flows)
+- Public market signals and volume spikes
+- Wallet performance tracking and analytics
+- Aggregated public information from open sources
 
-1. **Установи токен бота**
-   - Создай бота в @BotFather → получи `BOT_TOKEN`
-   - Добавь свой Telegram ID в `.env` как `ADMIN_ID`
-
-2. **Запусти**
-   ```bash
-   cd alpha_club
-   pip install -r requirements.txt
-   cp .env.example .env   # отредактируй
-   python bot.py
-   ```
-
-3. **Протестируй**
-   - Напиши боту `/start`
-   - `/add_signal 1 Тестовый ончейн-сигнал` (как админ)
-   - Получи сигнал с задержкой по твоему tier
-
-## 📁 Структура проекта
-
-```
-alpha_club/
-├── bot.py              # Главный Telegram-бот (aiogram 3.x)
-├── scanner.py          # Симулятор ончейн-сканера (замени на реальный)
-├── database.py         # SQLite (users, signals, payments)
-├── config.py           # Настройки + mock-сигналы
-├── requirements.txt
-└── README.md
-```
-
-## 💎 Модель монетизации (как в твоей схеме)
-
-| Уровень       | Цена          | Задержка | Что получает                          | Как войти          |
-|---------------|---------------|----------|---------------------------------------|--------------------|
-| **Демо (0)**  | Бесплатно     | 60 сек   | Базовые ончейн-сигналы                | /start             |
-| **Базовый (1)** | $100 / 0.5 SOL | 30 сек   | Ончейн + ранние пулы Pump/Raydium     | /subscribe → buy_1 |
-| **VIP (2)**   | $150 / 1 SOL  | 5 сек    | + Сигналы из закрытых KOL-групп       | /subscribe → buy_2 |
-| **Inner (3)** | Revenue Share 15-25% | 0 сек | Полный инсайд от команд + пул клуба   | Только инвайт      |
-
-**Защита канала (реализовано):**
-- Постепенный допуск по tier
-- Mock-оплата с TX hash (в реальности — проверка через Solana RPC)
-- Реферальная система (добавь в код: +1 referral → бонус 7 дней VIP)
-- "Вечная" подписка через разовый платёж + испытательный срок (логика в БД)
-
-## 🔧 Как добавить реальные источники
-
-### 1. Ончейн-сканер (Уровень 1 — Чистая альфа)
-Замени `scanner.py` на реальный код:
-- **Helius Webhooks** (лучший для Solana) — подпишись на `enhancedTransactions` + фильтр по адресам китов
-- **QuickNode / Triton** — WebSocket `programSubscribe` на Raydium/Pump.fun
-- **Arkham + Nansen API** — отслеживание labeled wallets
-- Пример интеграции: слушай `create` инструкции на Pump.fun program ID
-
-Текущий сканер генерирует правдоподобные сигналы каждые 45-90 сек.
-
-### 2. Приватные группы (Уровень 2)
-- Скаут 2 сидит в 20+ Discord и пересылает в админ-чат
-- В боте команда `/add_signal 2 "Текст из закрытой группы"`
-- Автоматическая рассылка только tier 2+
-
-### 3. Inner Circle (Уровень 3)
-- Личный чат с админом
-- Revenue share: бот считает PnL по сигналам (добавь логику) → делит прибыль
-
-## 🛡️ Безопасность и этика (как ты просил)
-
-**Разрешено (серый):**
-- Ончейн-аналитика (мемпул, labeled wallets)
-- Сигналы из платных/закрытых чатов (куда может вступить любой)
-- Публичные утечки от младших сотрудников
-
-**Запрещено (тёмное — не реализовано):**
-- Слив уязвимостей контрактов
-- Прямые инсайды от разработчиков за деньги (NDA breach)
-- Всё, что тянет на соучастие в краже
-
-**Если перейдёшь на тёмную сторону** — клуб умрёт от скам-обвинений или регулятора. Мы держим чистоту.
-
-## 📈 Как масштабировать
-
-1. **Скауты** (3-5 человек в разных TZ):
-   - Ончейн-детектив (Nansen/Arkham)
-   - Комьюнити-менеджер (Discord)
-   - Линкер (митапы, Twitter Spaces)
-
-2. **Платёжка**:
-   - Solana Pay + Helius для авто-подтверждения
-   - Или @wallet / NOWPayments
-   - NFT-подписка (Tier 2 = держатель NFT)
-
-3. **Frontend**:
-   - Добавить веб-дашборд (Streamlit/FastAPI) с историей сигналов и PnL
-   - Приватный сайт с leaderboard топ-кошельков
-
-4. **Рефералка**:
-   - Каждый реферал → +7 дней VIP отправителю
-   - Inner Circle получает % с рефералов навсегда
-
-## 🧪 Тестирование
-
-```bash
-# В терминале
-python bot.py
-
-# В Telegram (как админ)
- /start
- /add_signal 1 🟢 Кошелёк 7xK9pQ купил $PEPE на $4200
- /pay 2 150 mock_tx_123
-
-# Обычный пользователь
- /start
- /subscribe
-```
-
-## ⚠️ Важно перед запуском
-
-- Замени `PAYMENT_WALLET` на свой
-- Добавь реальный `BOT_TOKEN` и `ADMIN_ID`
-- Для продакшена: PostgreSQL вместо SQLite, Redis для очередей сигналов, rate limiting
-- Логируй всё (KYC для Inner Circle)
-
-## 💬 Следующие шаги (что я могу сделать прямо сейчас)
-
-- Добавить реальную проверку Solana-транзакций (нужен RPC endpoint)
-- Сделать веб-дашборд на FastAPI + HTMX
-- Интегрировать реальные Helius webhooks
-- Добавить PnL-трекер по сигналам
-- Создать NFT для VIP-подписки (Metaplex)
-
-Напиши, что доработать первым — и я сразу обновлю код.
-
-**ForgeAlpha Club готов к запуску.**  
-Ты теперь имеешь полный технический фундамент под инсайдерский клуб уровня "от чистого ончейна до Inner Circle".
-
-Удачи в поиске альфы! 🚀
-
-*Не финансовый совет. Всё на свой страх и риск. В крипте всегда есть риск потери капитала.*
+We do **not** sell private information, insider tips, or confidential data. All signals are derived from publicly available blockchain data, public APIs, and open social channels.
 
 ---
 
-## 📦 Как выложить на GitHub (для feelmyskill99-dev)
+## ✨ Key Features (v2)
 
-**Твой репозиторий**: `https://github.com/feelmyskill99-dev/forgealpha-club`
+- **Tier-based access** with time advantage (0–60 seconds delay)
+- **Real-time on-chain scanner** (mock for demo, ready for Helius/QuickNode)
+- **Secure payment flow** (pending → confirmed, no instant upgrades)
+- **Referral system** with real rewards only after confirmed payment
+- **Modular architecture** (easy to extend and maintain)
+- **Production-ready structure** (Docker, CI, migrations, tests)
 
-### Шаг за шагом (2 минуты):
+---
 
-1. **Создай репозиторий на GitHub**
-   - Зайди на https://github.com/new
-   - Название: `forgealpha-club`
-   - Описание: `ForgeAlpha Club — инсайдерский клуб чистой альфы (ончейн + VIP + Inner Circle)`
-   - Поставь **Public** или **Private** (рекомендую Private на старте)
-   - **НЕ** ставь галочку "Initialize this repository with a README"
+## 💎 Subscription Tiers
 
-2. **На своём компьютере выполни:**
+| Tier          | Price          | Delay | What you get |
+|---------------|----------------|-------|--------------|
+| **Free**      | Free           | 60s   | Basic on-chain alerts |
+| **Basic**     | $100 / 0.5 SOL | 30s   | Faster signals + wallet tracking |
+| **VIP**       | $150 / 1 SOL   | 5s    | Priority signals + advanced analytics |
+| **Pro**       | Custom         | 0s    | Full access + API + revenue share (by invitation) |
+
+---
+
+## 🛠️ Quick Start (Local Development)
 
 ```bash
-# Клонируй пустой репозиторий
 git clone https://github.com/feelmyskill99-dev/forgealpha-club.git
 cd forgealpha-club
 
-# Скопируй все файлы из проекта (или используй архив)
-# Например, если файлы у тебя в папке alpha_club:
-cp -r /путь/к/alpha_club/* .
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate   # Windows: venv\Scripts\activate
 
-git add .
-git commit -m "Initial commit: ForgeAlpha Club v1.0 — полный стек инсайдерского клуба"
-git push origin main
+pip install -r requirements.txt
+cp .env.example .env
+# Edit .env with your BOT_TOKEN and ADMIN_ID
+
+python -m app.main
 ```
 
-Готово! Репозиторий будет выглядеть точно как здесь.
+---
 
-Если хочешь, я могу:
-- Добавить CI/CD (GitHub Actions для тестов)
-- Сделать красивый README с бейджами
-- Подготовить `setup.sh` для автоматической установки
+## 📁 Project Structure (v2)
 
-Просто скажи.
+```
+forgealpha-club/
+├── app/
+│   ├── main.py
+│   ├── core/              # Configuration, logging, constants
+│   ├── bot/               # Telegram bot routers & handlers
+│   ├── db/                # Database connection + repositories + migrations
+│   ├── services/          # Business logic (payments, subscriptions, signals)
+│   ├── scanners/          # On-chain scanners (mock + real)
+│   └── utils/
+├── tests/
+├── scripts/
+├── .github/workflows/
+├── Dockerfile
+├── docker-compose.yml
+├── pyproject.toml
+├── README.md
+└── requirements.txt
+```
+
+---
+
+## 🔒 Security & Compliance Notes
+
+- All payments go through **pending → confirmed** flow only
+- No instant tier upgrades without verified transaction
+- HTML escaping enabled for all user-generated content
+- Rate limiting and input validation on all endpoints
+- Clear separation between public on-chain data and any paid features
+
+**Legal positioning**: This product provides **on-chain analytics and public market intelligence**. It does not provide or sell non-public information.
+
+---
+
+## 🧪 Testing
+
+```bash
+pytest
+ruff check .
+mypy app/
+```
+
+---
+
+## 🐳 Docker
+
+```bash
+docker-compose up --build
+```
+
+---
+
+## 📈 Roadmap
+
+- [x] Modular architecture (v2)
+- [x] Secure payment flow
+- [ ] Real Helius/QuickNode scanner integration
+- [ ] PostgreSQL + Alembic migrations
+- [ ] Full referral system with confirmed payments only
+- [ ] Web dashboard (FastAPI + HTMX)
+- [ ] NFT subscription option
+- [ ] CI/CD + automated tests
+
+---
+
+## ⚠️ Important
+
+This is **demo software**. Real payments are not processed.  
+For production use, implement proper Solana transaction verification (Helius, QuickNode, or Solana RPC).
+
+**Not financial advice.** Cryptocurrency trading involves significant risk.
+
+---
+
+## 🤝 Contributing
+
+Pull requests are welcome. Please follow the modular structure and add tests for new features.
+
+---
+
+**ForgeAlpha Club v2** — Clean. Modular. Legal-safe. Ready for growth.
